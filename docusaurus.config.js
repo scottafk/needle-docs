@@ -80,10 +80,10 @@ const config = {
           //   position: "left",
           //   label: "Needle",
           // },
-          {
-            type: "search",
-            position: "right",
-          },
+          // {
+          //   type: "search",
+          //   position: "right",
+          // },
           {
             type: "docsVersionDropdown",
             position: "right",
@@ -111,13 +111,13 @@ const config = {
           },
         ],
       },
-      algolia: {
-        // This API key is "search-only" and safe to be published
-        apiKey: process.env.ALGOLIA_SEARCH_ONLY_API_KEY,
-        appId: process.env.ALGOLIA_APP_ID,
-        indexName: process.env.ALGOLIA_INDEX_NAME,
-        contextualSearch: true,
-      },
+      // algolia: {
+      //   // This API key is "search-only" and safe to be published
+      //   apiKey: process.env.ALGOLIA_SEARCH_ONLY_API_KEY,
+      //   appId: process.env.ALGOLIA_APP_ID,
+      //   indexName: process.env.ALGOLIA_INDEX_NAME,
+      //   contextualSearch: true,
+      // },
       footer: {
         style: "dark",
         links: [
@@ -126,7 +126,7 @@ const config = {
             items: [
               {
                 label: "Tutorial",
-                to: "/intro",
+                to: "/docs/intro",
               },
               // {
               //   label: "Documentation",

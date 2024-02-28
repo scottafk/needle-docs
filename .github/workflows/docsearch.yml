@@ -3,7 +3,7 @@ name: Docsearch Scraper
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   algolia:
     runs-on: ubuntu-latest

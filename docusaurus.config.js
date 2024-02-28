@@ -6,6 +6,8 @@
 
 import { themes as prismThemes } from "prism-react-renderer";
 
+const DefaultLocale = 'en';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Needle",
@@ -33,7 +35,7 @@ const config = {
     defaultLocale: "en",
     locales: ["en","fr"],
   },
-  presets: [
+   presets: [
     [
       "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
@@ -42,10 +44,24 @@ const config = {
           // routeBasePath: "/",
           breadcrumbs: true,
           sidebarPath: "./sidebars.js",
+          editUrl: ({locale, versionDocsDirPath, docPath}) => {
+            // Link to Crowdin for translate docs
+            if (locale !== DefaultLocale) {
+              return `https://crowdin.com/project/needle/${locale}`;
+            }
+            // Link to GitHub for English docs
+            return `https://github.com/scottafk/needle-docs/edit/main/${versionDocsDirPath}/${docPath}`;
+          },
         },
         theme: {
           customCss: "./src/css/custom.css",
         },
+        // sitemap: {
+        //   changefreq: 'weekly',
+        //   priority: 0.5,
+        //   ignorePatterns: ['/tags/**'],
+        //   filename: 'sitemap.xml',
+        // },
       }),
     ],
   ],
@@ -80,10 +96,10 @@ const config = {
           //   position: "left",
           //   label: "Needle",
           // },
-          // {
-          //   type: "search",
-          //   position: "right",
-          // },
+          {
+            type: "search",
+            position: "right",
+          },
           {
             type: "docsVersionDropdown",
             position: "right",
@@ -111,13 +127,13 @@ const config = {
           },
         ],
       },
-      // algolia: {
-      //   // This API key is "search-only" and safe to be published
-      //   apiKey: process.env.ALGOLIA_SEARCH_ONLY_API_KEY,
-      //   appId: process.env.ALGOLIA_APP_ID,
-      //   indexName: process.env.ALGOLIA_INDEX_NAME,
-      //   contextualSearch: true,
-      // },
+      algolia: {
+        // This API key is "search-only" and safe to be published
+        apiKey: "ef4d9c757bc56cd76df15626c6fc5b97",
+        appId: "01H350K8AP",
+        indexName: "needle",
+        contextualSearch: true,
+      },
       footer: {
         style: "dark",
         links: [

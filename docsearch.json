@@ -1,7 +1,7 @@
 {
     "index_name": "needle",
-    "start_urls": ["http://docs.ibax.io/"], 
-    "sitemap_urls": ["http://docs.ibax.io/sitemap.xml"],
+    "start_urls": ["https://scottafk.github.io/needle-docs"], 
+    "sitemap_urls": ["https://scottafk.github.io/needle-docs/sitemap.xml"],
     "stop_urls": ["/search"], 
     "selectors": {
       "lvl0": {

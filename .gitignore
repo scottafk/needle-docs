@@ -21,5 +21,6 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
-!i18n/en
+i18n/*
+!i18n/en/
 /needle*

@@ -15,22 +15,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: yarn install
-
       - name: Install Crowdin CLI
         run: |
-          curl -L https://downloads.crowdin.com/cli/v2/crowdin-cli.zip -o crowdin-cli.zip
-          unzip crowdin-cli.zip
-          sudo mv crowdin-cli/crowdin /usr/local/bin
-
+          yarn global add crowdin-cli
+          yarn crowdin setup
+      
       - name: Run Crowdin commands
-        run: yarn crowdin:download && yarn crowdin:upload
+        run: |
+          yarn crowdin:download 
+          yarn crowdin:upload
 
       - name: crowdin-action
         uses: crowdin/github-action@v1.19.0

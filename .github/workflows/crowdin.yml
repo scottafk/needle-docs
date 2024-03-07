@@ -15,13 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Crowdin CLI
-        run: |
-          yarn global add crowdin-cli
-          yarn crowdin setup
-      
       - name: Run Crowdin commands
         run: |
+          yarn install
           yarn crowdin:download 
           yarn crowdin:upload
 

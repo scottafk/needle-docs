@@ -22,7 +22,7 @@ Use the `contract` keyword to declare a smart contract, followed by the name of 
 
 > ContractStmt = "contract" [Identifier](#spec-identifier) [CodeBlockStmt](#spec-codeblock).
 
-Smart contract structure has three main parts: [Data](#spec-data), [Settings](#spec-settings), 
+Smart contract structure has three main parts: [Data](#spec-data), [Settings](#spec-settings),
 [Function](#spec-function).
 
 ```go
@@ -97,7 +97,7 @@ Functions are declared with the `func` keyword followed by the function name, pa
 >
 > `FuncParamList` = `FuncParam` \{ ("," \| " ") `FuncParam` \} .
 >
-> `FuncParam` = [IdentifierList](#spec-identifier)  \{ "..." \| [Typename](#spec-typename) \} .
+> `FuncParam` = [IdentifierList](#spec-identifier) \{ "..." \| [Typename](#spec-typename) \} .
 >
 > `FuncResult` = [TypeList](#spec-typename) .
 >
@@ -142,7 +142,7 @@ contract NameB {
         $result = 11
     }
 }
-contract NameA { 
+contract NameA {
     action {
         var a int
         a = NameB()
@@ -163,7 +163,7 @@ contract Name {
 
 The function may have many parameters, but when calling them, you only want to pass some of them. In this case, you can declare multiple functions with a dot, such functions are called `tail functions`, and then you can call the specified parameters in any order, without having to call them in the order declared. In such a function body, you can use these parameters normally. If no parameters are passed, they will be assigned default values. Tail functions do not have return values, and the return values are part of the main function.
 
-> 
+>
 
 ```go
 func myfunc(name string).Param1(p1 int).Param2(p2 string) int {
@@ -186,7 +186,6 @@ func Name(){
     tailA() //invalid
 }
 ```
-
 
 ## Syntax base {#syntax-base}
 
@@ -278,15 +277,15 @@ The value obtained by calculating the expression can be assigned to a variable, 
 
 Identifiers are used to identify variables, functions, constants, and other program names. Identifiers are composed of one or more letters, numbers, and underscores, and must begin with a letter. Identifiers cannot contain spaces and special characters. Identifiers are case-sensitive and cannot use [keywords](#spec-keyword) as identifiers.
 
-> `Identifier`       = `unicode_letter` \{ `letter` \| `unicode_digit` \}
+> `Identifier` = `unicode_letter` \{ `letter` \| `unicode_digit` \}
 >
-> `letter`          = `unicode_letter` \| "_" .
+> `letter` = `unicode_letter` \| "\_" .
 >
-> `unicode_letter`  = // a Unicode code point classified as "Letter".
+> `unicode_letter` = // a Unicode code point classified as "Letter".
 >
-> `unicode_digit`   = // a Unicode code point categorized as "Number, decimal digit".
+> `unicode_digit` = // a Unicode code point categorized as "Number, decimal digit".
 >
-> `IdentifierList`  = `Identifier` \{ ("," \| " ") `Identifier` \} .
+> `IdentifierList` = `Identifier` \{ ("," \| " ") `Identifier` \} .
 
 ```go
 a
@@ -300,13 +299,13 @@ Multiple identifiers can be combined into an identifier list, separated by comma
 
 The following keywords are reserved and cannot be used as identifiers.
 
-|  |||||
-| --- |--- |--- |--- |--- |
-| contract | func | data | action | conditions |
-| return | if | elif | else | while |
-| var | nil |break |continue |settings |
-| true | false | info |warning |error |
-| ... |||||
+|          |       |       |          |            |
+| -------- | ----- | ----- | -------- | ---------- |
+| contract | func  | data  | action   | conditions |
+| return   | if    | elif  | else     | while      |
+| var      | nil   | break | continue | settings   |
+| true     | false | info  | warning  | error      |
+| ...      |       |       |          |            |
 
 ### Number {#spec-number}
 
@@ -334,9 +333,9 @@ There are two basic types: `int` and `float`. If the number contains a decimal p
 >
 > `hex_digits` = `hex_digit` \{ [ "_" ] `hex_digit` \} .
 >
-> `DecimalLit` = `decimal_digit` [ "_" ]  `decimal_digits` .
+> `DecimalLit` = `decimal_digit` [ "_" ] `decimal_digits` .
 >
-> `BinaryLit` = "0" ( "b" | "B" ) [ "_" ]  `binary_digits` .
+> `BinaryLit` = "0" ( "b" | "B" ) [ "_" ] `binary_digits` .
 >
 > `OctalLit` = "0" ( "o" | "O" ) [ "_" ] `octal_digits` .
 >
@@ -363,7 +362,7 @@ String literals can be enclosed in double quotes `"` or backticks `` ` ``, and s
 
 > `StringLiteral` = `RawStringLiteral` | `InterpretedStringLiteral` .
 >
-> `RawStringLiteral` = `` "`" `` \{ `unicode_char` \} `` "`" `` .
+> `RawStringLiteral` = ``"`"`` \{ `unicode_char` \} ``"`"`` .
 >
 > `InterpretedStringLiteral` = `"` \{ `unicode_value` \} `"` .
 >
@@ -385,7 +384,7 @@ Variables are used to store values, and the values allowed by variables are dete
 
 The keyword `var` is used to declare local variables, and the variable must be followed by a variable name and type.
 
->`LocalVarDecl` = "var" [IdentifierList](#spec-identifier) [Typename](#spec-typename) .
+> `LocalVarDecl` = "var" [IdentifierList](#spec-identifier) [Typename](#spec-typename) .
 
 When declaring a variable, its value is the default value. To declare one or more variables, you can use a comma or space to separate multiple variable names and types. When the types of two or more consecutive named formal parameters of a function are the same, all types except the last one can be omitted.
 
@@ -427,7 +426,7 @@ d[0], d[1] = d[1], d[0] //error
 
 The keyword symbol `$` and [Identifier](#spec-identifier) is used to declare and use global variables. The syntax is as follows:
 
->`GlobalVarDecl` = "$" [Identifier](#spec-identifier) .
+> `GlobalVarDecl` = "$" [Identifier](#spec-identifier) .
 
 Global variables can be declared in any function within a single contract scope, but must be declared before use. The parameters defined in the `data` section are also global variables, but can only be used within the current contract scope.
 
@@ -533,47 +532,47 @@ It should be noted that when performing floating-point operations, the issue of 
 
 The following lists the operators and result types between operands of different types:
 
-| operand                       | x      | y       | z       |                           |
-| ----------------------------- |---------|---------| ------- | ------------------------- |
-| not(`!`)                      | -       |         | bool    | y to bool                 |
-| unary(`+`,`-`)                | -       | int     | int     |                           |
-|                               | -       | float   | float   |                           |
-| `<<` , `>>`                   | int     | int     | int     |                           |
-| `&`,`^`,`｜`                  | int     | int     | int     |                           |
-| `++` , `--`                   | int     | int     | int     |                           |
-| `+`,`-`,`*`,`/`,`%`           | string  | string  | string  | (only `+`)                |
-|                               | string  | int     | int     | x to int                  |
+| operand                       | x       | y       | z       |                            |
+| ----------------------------- | ------- | ------- | ------- | -------------------------- |
+| not(`!`)                      | -       |         | bool    | y to bool                  |
+| unary(`+`,`-`)                | -       | int     | int     |                            |
+|                               | -       | float   | float   |                            |
+| `<<` , `>>`                   | int     | int     | int     |                            |
+| `&`,`^`,`｜`                  | int     | int     | int     |                            |
+| `++` , `--`                   | int     | int     | int     |                            |
+| `+`,`-`,`*`,`/`,`%`           | string  | string  | string  | (only `+`)                 |
+|                               | string  | int     | int     | x to int                   |
 |                               | string  | float   | float   | x to decimal, y to decimal |
 |                               | float   | string  | float   | x to decimal, y to decimal |
 |                               | float   | int     | float   | x to decimal, y to decimal |
 |                               | float   | float   | float   | x to decimal, y to decimal |
-|                               | int     | string  | int     | y to int                  |
-|                               | int     | int     | int     |                           |
+|                               | int     | string  | int     | y to int                   |
+|                               | int     | int     | int     |                            |
 |                               | int     | float   | float   | x to decimal, y to decimal |
-|                               | decimal | string  | decimal | y to decimal              |
-|                               | decimal | int     | decimal | y to decimal              |
-|                               | decimal | float   | decimal | y to decimal              |
-|                               | decimal | decimal | decimal |                           |
-| `&&`,`\|\|`       |         |         | bool    | x to bool, y to bool      |
-| `==` ,`!=` ,`<`,`<=`,`>`,`>=` | nil     | nil     | bool    | only(`==` ,`!=`)          |
-|                               | bool    | bool    | bool    | only(`==` ,`!=`)          |
-|                               | string  | string  | bool    |                           |
-|                               | string  | int     | bool    | y to string               |
-|                               | string  | float   | bool    | y to string               |
-|                               | string  | decimal | bool    | y to string               |
+|                               | decimal | string  | decimal | y to decimal               |
+|                               | decimal | int     | decimal | y to decimal               |
+|                               | decimal | float   | decimal | y to decimal               |
+|                               | decimal | decimal | decimal |                            |
+| `&&`,`\|\|`                   |         |         | bool    | x to bool, y to bool       |
+| `==` ,`!=` ,`<`,`<=`,`>`,`>=` | nil     | nil     | bool    | only(`==` ,`!=`)           |
+|                               | bool    | bool    | bool    | only(`==` ,`!=`)           |
+|                               | string  | string  | bool    |                            |
+|                               | string  | int     | bool    | y to string                |
+|                               | string  | float   | bool    | y to string                |
+|                               | string  | decimal | bool    | y to string                |
 |                               | float   | string  | bool    | x to decimal, y to decimal |
 |                               | float   | int     | bool    | x to decimal, y to decimal |
 |                               | float   | float   | bool    | x to decimal, y to decimal |
-|                               | float   | decimal | bool    | x to decimal              |
-|                               | int     | string  | bool    | y to int                  |
-|                               | int     | int     | bool    |                           |
+|                               | float   | decimal | bool    | x to decimal               |
+|                               | int     | string  | bool    | y to int                   |
+|                               | int     | int     | bool    |                            |
 |                               | int     | float   | bool    | x to decimal, y to decimal |
-|                               | int     | decimal | bool    | y to int                  |
-|                               | decimal | string  | bool    | y to decimal              |
-|                               | decimal | int     | bool    | y to decimal              |
-|                               | decimal | float   | bool    | y to decimal              |
-|                               | decimal | decimal | bool    |                           |
-|                               |         |         |         |                           |
+|                               | int     | decimal | bool    | y to int                   |
+|                               | decimal | string  | bool    | y to decimal               |
+|                               | decimal | int     | bool    | y to decimal               |
+|                               | decimal | float   | bool    | y to decimal               |
+|                               | decimal | decimal | bool    |                            |
+|                               |         |         |         |                            |
 
 ### Slice {#spec-slice}
 
@@ -588,7 +587,7 @@ The range of the index must be positive. If `0<=low<=high<=len(arr)`, the index 
 ```go
 var a b c d e array str strA string
 a = [1,2,3,4,5]
-b = a[1:3] // b = [2,3] 
+b = a[1:3] // b = [2,3]
 c = a[1:] // c = [2,3,4,5]
 d = a[:3] // d = [1,2,3]
 e = a[:] // e = [1,2,3,4,5]

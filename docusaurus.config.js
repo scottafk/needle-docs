@@ -6,7 +6,7 @@
 
 import { themes as prismThemes } from "prism-react-renderer";
 
-const DefaultLocale = 'en';
+const DefaultLocale = "en";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -23,9 +23,9 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "IBAX-io", // Usually your GitHub org/user name.
   projectName: "needle", // Usually your repo name.
-  deploymentBranch: 'gh-pages',
+  deploymentBranch: "gh-pages",
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set

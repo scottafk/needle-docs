@@ -1,9 +1,13 @@
 name: Docsearch Scraper
 
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [deploy]
+  # workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
 jobs:
   algolia:
     runs-on: ubuntu-latest

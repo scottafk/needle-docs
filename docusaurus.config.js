@@ -33,18 +33,18 @@ const config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en","fr"],
+    locales: ["en", "fr"],
   },
-   presets: [
+  presets: [
     [
       "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          // routeBasePath: "/",
+          routeBasePath: "/",
           breadcrumbs: true,
           sidebarPath: "./sidebars.js",
-          editUrl: ({locale, versionDocsDirPath, docPath}) => {
+          editUrl: ({ locale, versionDocsDirPath, docPath }) => {
             // Link to Crowdin for translate docs
             if (locale !== DefaultLocale) {
               return `https://crowdin.com/project/needle/${locale}`;
@@ -53,6 +53,7 @@ const config = {
             return `https://github.com/scottafk/needle-docs/edit/main/${versionDocsDirPath}/${docPath}`;
           },
         },
+        blog: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -86,26 +87,20 @@ const config = {
         items: [
           {
             type: "docSidebar",
-            sidebarId: "tutorialSidebar",
+            sidebarId: "documentationSidebar",
             position: "left",
-            label: "Tutorial",
+            label: "Needle",
           },
-          // {
-          //   type: "docSidebar",
-          //   sidebarId: "documentationSidebar",
-          //   position: "left",
-          //   label: "Needle",
-          // },
           {
             type: "search",
             position: "right",
           },
-          {
-            type: "docsVersionDropdown",
-            position: "right",
-            // dropdownItemsAfter: [{to: '/versions', label: 'All versions'}],
-            dropdownActiveClassDisabled: true,
-          },
+          // {
+          //   type: "docsVersionDropdown",
+          //   position: "right",
+          //   dropdownItemsAfter: [{to: '/versions', label: 'All versions'}],
+          //   dropdownActiveClassDisabled: true,
+          // },
           {
             type: "localeDropdown",
             position: "right",
@@ -141,13 +136,9 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Tutorial",
-                to: "/docs/intro",
+                label: "Documentation",
+                to: "/",
               },
-              // {
-              //   label: "Documentation",
-              //   to: "/needle/spec",
-              // },
             ],
           },
           {

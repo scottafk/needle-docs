@@ -7,10 +7,6 @@
     "message": "Логотип Needle",
     "description": "The alt text of navbar logo"
   },
-  "item.label.Tutorial": {
-    "message": "Обучение",
-    "description": "Navbar item with label Tutorial"
-  },
   "item.label.Needle": {
     "message": "Needle",
     "description": "Navbar item with label Needle"

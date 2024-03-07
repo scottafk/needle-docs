@@ -2,7 +2,7 @@ name: Docsearch Scraper
 
 on:
   repository_dispatch:
-    types: [deploy]
+    types: [github_pages_finished]
   # workflow_dispatch:
   # push:
   #   branches:

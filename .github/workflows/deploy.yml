@@ -46,3 +46,11 @@ jobs:
           # You can swap them out with your own user credentials.
           user_name: github-actions[bot]
           user_email: 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Trigger deployment
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            "https://api.github.com/repos/scottafk/needle-docs/dispatches" \
+            -d '{"event_type": "github_pages_finished"}'

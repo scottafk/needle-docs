@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "Needle",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Логотип Needle",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Needle": {
+    "message": "Needle",
+    "description": "Navbar item with label Needle"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

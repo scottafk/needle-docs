@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: crowdin-download
+        id: crowdin-download
         uses: crowdin/github-action@v1
         with:
           upload_sources: true

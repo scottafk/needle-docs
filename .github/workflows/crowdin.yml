@@ -9,40 +9,36 @@ permissions: write-all
 
 jobs:
   synchronize-with-crowdin:
+    name: Synchronize with Crowdin
     runs-on: ubuntu-latest
     env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
       CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run Crowdin commands
-        run: |
-          yarn install
-          yarn crowdin:download 
-          yarn crowdin:upload
-
-      - name: crowdin-action
-        uses: crowdin/github-action@v1.19.0
+      - name: crowdin upload sources
+        uses: crowdin/github-action@v1
         with:
           upload_sources: true
           upload_translations: false
+      
+      - name: crowdin-download
+        uses: crowdin/github-action@v1
+        with:
           download_translations: true
-          # localization_branch_name: l10n_crowdin_translations
-          create_pull_request: false
-          # pull_request_title: 'New Crowdin Translations'
-          # pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
-          # pull_request_base_branch_name: 'main'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          localization_branch_name: l10n_crowdin_translations
+          # create pull request with translations
+          create_pull_request: true
+          pull_request_title: 'New Crowdin Translations'
+          pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
+          pull_request_base_branch_name: 'main'
+      - name: Enable auto-merge for the PR
+        if: steps.crowdin-download.outputs.pull_request_url
+        run: gh pr --repo $GITHUB_REPOSITORY merge ${{ steps.crowdin-download.outputs.pull_request_url }} --auto --merge
 
-      - name: Trigger deployment
-        run: |
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.everest-preview+json" \
-            "https://api.github.com/repos/scottafk/needle-docs/dispatches" \
-            -d '{"event_type": "crowdin_finished"}'
+      - name: Approve the PR
+        if: steps.crowdin-download.outputs.pull_request_url
+        run: gh pr --repo $GITHUB_REPOSITORY review ${{ steps.crowdin-download.outputs.pull_request_url }} --approve

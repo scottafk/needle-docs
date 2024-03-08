@@ -1,12 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  repository_dispatch:
-    types: 
-      - crowdin_finished
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
@@ -23,7 +20,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
 
       - name: Install dependencies
@@ -39,18 +36,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Build output to publish to the `gh-pages` branch:
           publish_dir: ./build
-          # The following lines assign commit authorship to the official
-          # GH-Actions bot for deploys to `gh-pages` branch:
-          # https://github.com/actions/checkout/issues/13#issuecomment-724415212
-          # The GH actions bot is used by default if you didn't specify the two fields.
-          # You can swap them out with your own user credentials.
-          user_name: github-actions[bot]
-          user_email: 41898282+github-actions[bot]@users.noreply.github.com
-
-      - name: Trigger deployment
-        run: |
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.everest-preview+json" \
-            "https://api.github.com/repos/scottafk/needle-docs/dispatches" \
-            -d '{"event_type": "github_pages_finished"}'

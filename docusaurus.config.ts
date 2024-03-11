@@ -1,7 +1,10 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 const DefaultLocale = "en";
+
 const config: Config = {
   title: 'Needle',
   tagline: 'Dinosaurs are cool',
@@ -48,6 +51,8 @@ const config: Config = {
             // Link to GitHub for English docs
             return `https://github.com/scottafk/needle-docs/edit/main/${versionDocsDirPath}/${docPath}`;
           },
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
         },
         blog: false,
         theme: {
@@ -76,11 +81,6 @@ const config: Config = {
         {
           type: "search",
           position: "right",
-        },
-        {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
-          position: 'right',
         },
         // {
         //   type: "docsVersionDropdown",

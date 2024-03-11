@@ -7,22 +7,29 @@ toc_max_heading_level: 4
 
 # Needle Specification {#needle-specification}
 
-The Needle Specification is a formal description of the Needle language. It is intended to be a reference for developers who want to understand the language in detail.
+The Needle Specification is a formal description of the Needle language. It is
+intended to be a reference for developers who want to understand the language in
+detail.
 
-It is a statically-typed language with a syntax that is familiar to developers who have experience with golang.
+It is a statically-typed language with a syntax that is familiar to developers
+who have experience with golang.
 
 ## File Structure {#file-structure}
 
-In Needle language, the main code block structure includes [Smart Contract](#spec-contract), [Data](#spec-data), [Function](#spec-function), [Settings](#spec-settings).
+In Needle language, the main code block structure includes
+[Smart Contract](#spec-contract), [Data](#spec-data),
+[Function](#spec-function), [Settings](#spec-settings).
 
 ### Smart Contract {#spec-contract}
 
-Use the `contract` keyword to declare a smart contract, followed by the name of the smart contract, and its content must be enclosed in curly braces.
+Use the `contract` keyword to declare a smart contract, followed by the name of
+the smart contract, and its content must be enclosed in curly braces.
 
-> ContractStmt = "contract" [Identifier](#spec-identifier) [CodeBlockStmt](#spec-codeblock).
+> ContractStmt = "contract" [Identifier](#spec-identifier) >
+> [CodeBlockStmt](#spec-codeblock).
 
-Smart contract structure has three main parts: [Data](#spec-data), [Settings](#spec-settings),
-[Function](#spec-function).
+Smart contract structure has three main parts: [Data](#spec-data),
+[Settings](#spec-settings), [Function](#spec-function).
 
 ```go
 contract Name {
@@ -34,15 +41,20 @@ contract Name {
 
 ### Data {#spec-data}
 
-Use `data` keyword partially describes the smart contract data input as well as the received form parameters. The `optional` indicates that the parameter is optional and not required.
+Use `data` keyword partially describes the smart contract data input as well as
+the received form parameters. The `optional` indicates that the parameter is
+optional and not required.
 
 > `DataStmt` = "data" "{" { `ParamSign` } "}" .
 >
-> `ParamSign` = [Identifier](#spec-identifier) [Typename](#spec-typename) [ `Tag` ] .
+> `ParamSign` = [Identifier](#spec-identifier) [Typename](#spec-typename) [ >
+> `Tag` ] .
 >
 > `Tag` = "optional" .
 
-use the symbol `$` to get the corresponding variable value, it must be used in the [Function](#spec-function) within the contract, it is equivalent to the global variable of the contract. You can use it directly or reassign it.
+use the symbol `$` to get the corresponding variable value, it must be used in
+the [Function](#spec-function) within the contract, it is equivalent to the
+global variable of the contract. You can use it directly or reassign it.
 
 ```go
 contract Name {
@@ -59,11 +71,13 @@ contract Name {
 
 ### Settings {#spec-settings}
 
-Use the `settings` keyword to declare constants, the constant type can be `int`, `float`, `string`, `bool`, it must be within the `contract`.
+Use the `settings` keyword to declare constants, the constant type can be `int`,
+`float`, `string`, `bool`, it must be within the `contract`.
 
 > `SettingsStmt` = "settings" `SettingsScope` .
 >
-> `SettingsScope` = "{" [Identifier](#spec-identifier) "=" [Typename](#spec-typename) "}" .
+> `SettingsScope` = "{" [Identifier](#spec-identifier) "="
+> [Typename](#spec-typename) "}" .
 
 ```go
 contract Name {
@@ -78,11 +92,15 @@ contract Name {
 
 ### Function {#spec-function}
 
-This function processes the [Data](#spec-data) and [Settings](#spec-settings) in the smart contract. It performs operations such as arithmetic, type conversion, and establishing interactions between contracts.
+This function processes the [Data](#spec-data) and [Settings](#spec-settings) in
+the smart contract. It performs operations such as arithmetic, type conversion,
+and establishing interactions between contracts.
 
 #### Function Declaration {#function-decl}
 
-Functions are declared with the `func` keyword followed by the function name, parameters, type parameters, function tail, a return type and finally the function body.
+Functions are declared with the `func` keyword followed by the function name,
+parameters, type parameters, function tail, a return type and finally the
+function body.
 
 > `FuncDecl` = "func" FuncName `FuncSign` `FuncBody` .
 >
@@ -96,13 +114,17 @@ Functions are declared with the `func` keyword followed by the function name, pa
 >
 > `FuncParamList` = `FuncParam` { ("," | " ") `FuncParam` } .
 >
-> `FuncParam` = [IdentifierList](#spec-identifier) { "..." | [Typename](#spec-typename) } .
+> `FuncParam` = [IdentifierList](#spec-identifier) { "..." | >
+> [Typename](#spec-typename) } .
 >
 > `FuncResult` = [TypeList](#spec-typename) .
 >
 > `FuncTail` = "." [Identifier](#spec-identifier) [ `FuncParams` ] .
 
-The function can have multiple parameters, each parameter followed by a parameter name and type, separated by a space or comma. The return value cannot be enclosed in parentheses `()`, and the return type cannot declare its variable name. Use the keyword `return` to return one or more values.
+The function can have multiple parameters, each parameter followed by a
+parameter name and type, separated by a space or comma. The return value cannot
+be enclosed in parentheses `()`, and the return type cannot declare its variable
+name. Use the keyword `return` to return one or more values.
 
 ```go
 func Add(a b, c int, s string) int string{
@@ -113,7 +135,9 @@ func Add(a b, c int, s string) int string{
 }
 ```
 
-If the function does not declare a parameter list, the parentheses `()` in the function signature can be omitted, and in this case, the type declaration after the function name is called the result parameter.
+If the function does not declare a parameter list, the parentheses `()` in the
+function signature can be omitted, and in this case, the type declaration after
+the function name is called the result parameter.
 
 ```go
 func Get string{
@@ -121,7 +145,11 @@ func Get string{
 }
 ```
 
-The function signature can use `...` to represent the type of variadic parameters, which must be the last parameter, and its data type is [Array](#spec-typename). The variadic parameter contains all the variables starting from the call to pass the parameter. Any type of variable can be passed, but conflicts with data types need to be handled.
+The function signature can use `...` to represent the type of variadic
+parameters, which must be the last parameter, and its data type is
+[Array](#spec-typename). The variadic parameter contains all the variables
+starting from the call to pass the parameter. Any type of variable can be
+passed, but conflicts with data types need to be handled.
 
 ```go
 func sum(out string, values ...) {
@@ -133,7 +161,10 @@ func Name() {
 }
 ```
 
-THe function thought the `return` statement returns a value, it will not be passed to other contracts. If you want to pass the return value of the contract to another contract, you need to assign the return value to the `$result` variable.
+THe function thought the `return` statement returns a value, it will not be
+passed to other contracts. If you want to pass the return value of the contract
+to another contract, you need to assign the return value to the `$result`
+variable.
 
 ```go
 contract NameB {
@@ -160,7 +191,13 @@ contract Name {
 
 #### Tail function {#tail-function}
 
-The function may have many parameters, but when calling them, you only want to pass some of them. In this case, you can declare multiple functions with a dot, such functions are called `tail functions`, and then you can call the specified parameters in any order, without having to call them in the order declared. In such a function body, you can use these parameters normally. If no parameters are passed, they will be assigned default values. Tail functions do not have return values, and the return values are part of the main function.
+The function may have many parameters, but when calling them, you only want to
+pass some of them. In this case, you can declare multiple functions with a dot,
+such functions are called `tail functions`, and then you can call the specified
+parameters in any order, without having to call them in the order declared. In
+such a function body, you can use these parameters normally. If no parameters
+are passed, they will be assigned default values. Tail functions do not have
+return values, and the return values are part of the main function.
 
 >
 
@@ -173,7 +210,12 @@ func Name{
 }
 ```
 
-Different functions can be called using a dot. When calling a function, the return value of this function can be used as the input of the next function, and the return value is obtained in the order of definition. Multiple tail functions are only visible to the main function, not to other functions. Tail functions cannot be called separately, they must be connected to the main function or other tail functions under the main function.
+Different functions can be called using a dot. When calling a function, the
+return value of this function can be used as the input of the next function, and
+the return value is obtained in the order of definition. Multiple tail functions
+are only visible to the main function, not to other functions. Tail functions
+cannot be called separately, they must be connected to the main function or
+other tail functions under the main function.
 
 ```go
 func A(int).tailA() int, string
@@ -192,11 +234,16 @@ The source code must be encoded using UTF-8.
 
 ### Code block {#spec-codeblock}
 
-The curly braces `{}` specify a code block that can contain local variables. Variables in the code block can only be used in the code block and its sub-code block. The function body is also a code block.
+The curly braces `{}` specify a code block that can contain local variables.
+Variables in the code block can only be used in the code block and its sub-code
+block. The function body is also a code block.
 
 > `CodeBlockStmt` = "{" ... "}" .
 
-By default, variables in a code block are not visible, and the scope of a variable can be extended to its sub-code block. In a code block, you can use the name of an existing variable to define a new variable. Therefore, it is not visible outside its scope. When the scope ends, the variable will be destroyed.
+By default, variables in a code block are not visible, and the scope of a
+variable can be extended to its sub-code block. In a code block, you can use the
+name of an existing variable to define a new variable. Therefore, it is not
+visible outside its scope. When the scope ends, the variable will be destroyed.
 
 ```go
 contract Name {
@@ -213,7 +260,9 @@ contract Name {
 
 ### Comment {#spec-comment}
 
-Comments can be used as documentation, and the content of the comments will be ignored by the compiler. There are two types of comments, one is **single-line comments**, and the other is **multi-line comments**.
+Comments can be used as documentation, and the content of the comments will be
+ignored by the compiler. There are two types of comments, one is **single-line
+comments**, and the other is **multi-line comments**.
 
 1. Single line comments start with `//` and end at the end of the line.
 
@@ -224,7 +273,9 @@ func add(a int, b int) int {
 }
 ```
 
-2. Multi-line comments start with `/*` and end with `*/`. Multi-line comments are not affected by newline characters, can span multiple lines, and can be commented out anywhere.
+2. Multi-line comments start with `/*` and end with `*/`. Multi-line comments
+   are not affected by newline characters, can span multiple lines, and can be
+   commented out anywhere.
 
 ```go
 func /*here*/a() {
@@ -239,7 +290,9 @@ here
 
 ### Newline {#spec-newline}
 
-The newline character is a delimiter between expressions and statements, and the newline character is replaced by a semicolon `;`, which can be used to separate multiple expressions or statements.
+The newline character is a delimiter between expressions and statements, and the
+newline character is replaced by a semicolon `;`, which can be used to separate
+multiple expressions or statements.
 
 ```go
 var a int
@@ -251,30 +304,43 @@ var a int; as = 1
 
 ### Delimiter {#spec-delimiter}
 
-Delimiter are used to separate identifiers, such as variable names, function names, type names, etc.
+Delimiter are used to separate identifiers, such as variable names, function
+names, type names, etc.
 
 > Delimiter = "(" | ")" | "{" | "}" | "[" | "]" | "." | "," | "=" | ":" .
 
 ### Expression {#spec-expression}
 
-Expression refers to a statement that calculates a value. An expression consists of constants, variables, operators, and functions. A definite value can be obtained after calculation. The expression does not change the value, it just calculates a value.
+Expression refers to a statement that calculates a value. An expression consists
+of constants, variables, operators, and functions. A definite value can be
+obtained after calculation. The expression does not change the value, it just
+calculates a value.
 
 Some examples of expressions, not limited to:
 
-- Literals, including string literals, numeric literals, such as: `100`, `3.14`, `"hello"`.
+- Literals, including string literals, numeric literals, such as: `100`, `3.14`,
+  `"hello"`.
 - Variable names, such as: `x`, `sum`.
 - Arithmetic expressions, such as: `1 + 2`, `a * b`.
 - Function call expressions, such as: `fnName()`.
 - Comparison expressions, such as: `a == b`, `score > 90`.
 - Logical expressions, such as: `a && b`, `!done`.
-- Array, slice, map index expression, such as: `array[2]`, `map["key"]`, `slice[1:3]`.
+- Array, slice, map index expression, such as: `array[2]`, `map["key"]`,
+  `slice[1:3]`.
 - Type conversion expression, such as: `Int(a)`.
 
-The value obtained by calculating the expression can be assigned to a variable, used as a parameter to a function, combined with other expressions to form more complex expressions, and used in if condition statements to control the program flow.
+The value obtained by calculating the expression can be assigned to a variable,
+used as a parameter to a function, combined with other expressions to form more
+complex expressions, and used in if condition statements to control the program
+flow.
 
 ### Identifier {#spec-identifier}
 
-Identifiers are used to identify variables, functions, constants, and other program names. Identifiers are composed of one or more letters, numbers, and underscores, and must begin with a letter. Identifiers cannot contain spaces and special characters. Identifiers are case-sensitive and cannot use [keywords](#spec-keyword) as identifiers.
+Identifiers are used to identify variables, functions, constants, and other
+program names. Identifiers are composed of one or more letters, numbers, and
+underscores, and must begin with a letter. Identifiers cannot contain spaces and
+special characters. Identifiers are case-sensitive and cannot use
+[keywords](#spec-keyword) as identifiers.
 
 > `Identifier` = `unicode_letter` { `letter` | `unicode_digit` }
 >
@@ -282,7 +348,8 @@ Identifiers are used to identify variables, functions, constants, and other prog
 >
 > `unicode_letter` = // a Unicode code point classified as "Letter".
 >
-> `unicode_digit` = // a Unicode code point categorized as "Number, decimal digit".
+> `unicode_digit` = // a Unicode code point categorized as "Number, decimal
+> digit".
 >
 > `IdentifierList` = `Identifier` { ("," | " ") `Identifier` } .
 
@@ -292,7 +359,8 @@ x_123
 αβ
 ```
 
-Multiple identifiers can be combined into an identifier list, separated by commas or spaces.
+Multiple identifiers can be combined into an identifier list, separated by
+commas or spaces.
 
 ### Keyword {#spec-keyword}
 
@@ -308,9 +376,14 @@ The following keywords are reserved and cannot be used as identifiers.
 
 ### Number {#spec-number}
 
-Number literal values include: decimal integer, binary integer, octal integer, hexadecimal integer, and floating-point number and scientific notation.
+Number literal values include: decimal integer, binary integer, octal integer,
+hexadecimal integer, and floating-point number and scientific notation.
 
-There are two basic types: `int` and `float`. If the number contains a decimal point or `eE`, it is a **float** type, which conforms to the standard IEEE-754 64-bit floating-point number, otherwise it is an **int** type. int is equivalent to int64 in the Golang language, and float is equivalent to float64 in the Golang language.
+There are two basic types: `int` and `float`. If the number contains a decimal
+point or `eE`, it is a **float** type, which conforms to the standard IEEE-754
+64-bit floating-point number, otherwise it is an **int** type. int is equivalent
+to int64 in the Golang language, and float is equivalent to float64 in the
+Golang language.
 
 > `int` = `DecimalLit` | `BinaryLit` | `OctalLit` | `HexLit` .
 >
@@ -342,7 +415,8 @@ There are two basic types: `int` and `float`. If the number contains a decimal p
 >
 > `ExponentPart` = ( "e" | "E" ) [ "+" | "-" ] `decimal_digits` .
 >
-> `FloatLit` = `decimal_digits` "." [ `decimal_digits` ] [ `ExponentPart` ] | `decimal_digits` `ExponentPart` | "." `decimal_digits` [ `ExponentPart` ] .
+> `FloatLit` = `decimal_digits` "." [ `decimal_digits` ] [ `ExponentPart` ] |
+> `decimal_digits` `ExponentPart` | "." `decimal_digits` [ `ExponentPart` ] .
 
 ```
 0
@@ -357,7 +431,10 @@ There are two basic types: `int` and `float`. If the number contains a decimal p
 
 ### String {#spec-string}
 
-String literals can be enclosed in double quotes `"` or backticks `` ` ``, and string literals enclosed in backticks can span multiple lines. The string in double quotes can contain escape sequences for double quotes, newline, and carriage return. The string in backticks is not escaped.
+String literals can be enclosed in double quotes `"` or backticks `` ` ``, and
+string literals enclosed in backticks can span multiple lines. The string in
+double quotes can contain escape sequences for double quotes, newline, and
+carriage return. The string in backticks is not escaped.
 
 > `StringLiteral` = `RawStringLiteral` | `InterpretedStringLiteral` .
 >
@@ -377,15 +454,22 @@ str = `This is \n \t \r a other string`
 
 ### Variable {#spec-variable}
 
-Variables are used to store values, and the values allowed by variables are determined by their types. The type is immutable, but the value can be changed during program execution.
+Variables are used to store values, and the values allowed by variables are
+determined by their types. The type is immutable, but the value can be changed
+during program execution.
 
 #### Local Variable {#local-variable}
 
-The keyword `var` is used to declare local variables, and the variable must be followed by a variable name and type.
+The keyword `var` is used to declare local variables, and the variable must be
+followed by a variable name and type.
 
-> `LocalVarDecl` = "var" [IdentifierList](#spec-identifier) [Typename](#spec-typename) .
+> `LocalVarDecl` = "var" [IdentifierList](#spec-identifier) >
+> [Typename](#spec-typename) .
 
-When declaring a variable, its value is the default value. To declare one or more variables, you can use a comma or space to separate multiple variable names and types. When the types of two or more consecutive named formal parameters of a function are the same, all types except the last one can be omitted.
+When declaring a variable, its value is the default value. To declare one or
+more variables, you can use a comma or space to separate multiple variable names
+and types. When the types of two or more consecutive named formal parameters of
+a function are the same, all types except the last one can be omitted.
 
 ```go
 var a int
@@ -397,7 +481,8 @@ b1, b2 = "string1", "string2"
 c c1 = true 1.2
 ```
 
-Variables cannot be initialized when declared, and must be assigned after declaration.
+Variables cannot be initialized when declared, and must be assigned after
+declaration.
 
 ```go
 // invalid
@@ -408,7 +493,9 @@ var a int
 a = 1
 ```
 
-The types `map` and `array` do not support multiple assignments on the same line using `{}` and `[]`, but multiple assignments on the same line can be done using variable names.
+The types `map` and `array` do not support multiple assignments on the same line
+using `{}` and `[]`, but multiple assignments on the same line can be done using
+variable names.
 
 ```go
 var a b int c c1 map d d1 array
@@ -423,11 +510,15 @@ d[0], d[1] = d[1], d[0] //error
 
 #### Global Variable {#global-variable}
 
-The keyword symbol `$` and [Identifier](#spec-identifier) is used to declare and use global variables. The syntax is as follows:
+The keyword symbol `$` and [Identifier](#spec-identifier) is used to declare and
+use global variables. The syntax is as follows:
 
 > `GlobalVarDecl` = "$" [Identifier](#spec-identifier) .
 
-Global variables can be declared in any function within a single contract scope, but must be declared before use. The parameters defined in the `data` section are also global variables, but can only be used within the current contract scope.
+Global variables can be declared in any function within a single contract scope,
+but must be declared before use. The parameters defined in the `data` section
+are also global variables, but can only be used within the current contract
+scope.
 
 ```go
 contract Name {
@@ -446,26 +537,39 @@ contract Name {
 
 #### Predeclared global variables {#predeclared-global-variables}
 
-Predeclared global variables can be used in any contract scope and these global variables can be specified as immutable during compilation, which is mutable by default.
+Predeclared global variables can be used in any contract scope and these global
+variables can be specified as immutable during compilation, which is mutable by
+default.
 
 Predeclared global variables include:
 
-- `$original_contract` - name of the contract that initially processed the transaction. It means the contract is called during transaction validation if the variable is an empty string. To check whether the contract is called by another contract or directly by the transaction, you need to compare the values of $original_contract and $this_contract. It means that the contract is called by the transaction if they are equal.
+- `$original_contract` - name of the contract that initially processed the
+  transaction. It means the contract is called during transaction validation if
+  the variable is an empty string. To check whether the contract is called by
+  another contract or directly by the transaction, you need to compare the
+  values of $original_contract and $this_contract. It means that the contract is
+  called by the transaction if they are equal.
 - `$this_contract` - name of the contract currently being executed.
-- `$stack` - contract array stack with a data type of [array](#spec-typename), containing all contracts executed. The first element of the array represents the name of the contract currently being executed, while the last element represents the name of the contract that initially processed the transaction.
+- `$stack` - contract array stack with a data type of [array](#spec-typename),
+  containing all contracts executed. The first element of the array represents
+  the name of the contract currently being executed, while the last element
+  represents the name of the contract that initially processed the transaction.
 - `$result` - assigned with the return result of the contract.
 
 ### Typename {#spec-typename}
 
-All variables have types, and type names are used to represent the data types of variables.
+All variables have types, and type names are used to represent the data types of
+variables.
 
 > `Type` = `Typename` | `TypeList` .
 >
-> `Typename` = "int" | "string" | "float" | "bool" | "bytes" | "address" | "money" | "array" | "map" | "file" .
+> `Typename` = "int" | "string" | "float" | "bool" | "bytes" | "address" |
+> "money" | "array" | "map" | "file" .
 >
 > `TypeList` = `Typename` { ("," | " ") `Typename` } .
 
-The following type names are reserved and cannot be used as identifiers, equivalent to the corresponding types in the Golang language.
+The following type names are reserved and cannot be used as identifiers,
+equivalent to the corresponding types in the Golang language.
 
 - **int** - int64, zero value is `0`.
 - **string** - string, zero value is `""`.
@@ -475,14 +579,19 @@ The following type names are reserved and cannot be used as identifiers, equival
 - **array** - []interface{}, zero value is `[]`.
 - **map** - map[string]interface{}, zero value is `map[]`.
 - **address** - int64, zero value is `0`.
-- **money** - [decimal.Decimal](https://github.com/shopspring/decimal), zero value is `0`.
+- **money** - [decimal.Decimal](https://github.com/shopspring/decimal), zero
+  value is `0`.
 - **file** - map[string]interface{}, zero value is `map[]`.
 
 #### Object and array literals {#object-and-array-literals}
 
-`array` and `map` types can be created using `[]` and `{}` operators or specified elements.
+`array` and `map` types can be created using `[]` and `{}` operators or
+specified elements.
 
-`array` type index must be `int`. `map` type index must be `string`. If a value is assigned to an index greater than the current maximum index of the `array` element, an empty element will be added to the array. The initialization value of these elements is `nil`.
+`array` type index must be `int`. `map` type index must be `string`. If a value
+is assigned to an index greater than the current maximum index of the `array`
+element, an empty element will be added to the array. The initialization value
+of these elements is `nil`.
 
 ```go
 var arr array m map
@@ -496,7 +605,9 @@ m["key1"] = arr[5] // m["key1"] = nil
 
 ### Operator {#spec-operator}
 
-An operation expression consists of an operator and an operand. Needle supports the following operation operators: arithmetic operators, comparison operators, logical operators, bitwise operators, and assignment operators.
+An operation expression consists of an operator and an operand. Needle supports
+the following operation operators: arithmetic operators, comparison operators,
+logical operators, bitwise operators, and assignment operators.
 
 Follow are the currently supported operators:
 
@@ -504,7 +615,8 @@ Follow are the currently supported operators:
 - comparison operators: `==`, `!=`, `>`, `>=`, `<`, `<=`;
 - logical operators: `&&`, `||`, `!`;
 - bitwise operators: `&`, `|`, `^`, `<<`, `>>`;
-- assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`.
+- assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`,
+  `<<=`, `>>=`.
 
 The priority of the operators is from high to low:
 
@@ -521,15 +633,28 @@ The priority of the operators is from high to low:
 - `||`；
 - `=`，`+=`，`-=`，`*=`，`/=`，`%=`，`&=`，`|=`，`^=`，`<<=`，`>>=`；
 
-The result type of the operation is the same as the type of the operand. Except for comparison operators and logical operators, their result type is `bool`. In logical expressions, the result type will be automatically converted to a logical value, if the operand type is not the default value, and the result is `true`.
+The result type of the operation is the same as the type of the operand. Except
+for comparison operators and logical operators, their result type is `bool`. In
+logical expressions, the result type will be automatically converted to a
+logical value, if the operand type is not the default value, and the result is
+`true`.
 
-`a += b` is equivalent to `a = a + b`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=` are also defined in this way. `a++` is equivalent to `a += 1`.
+`a += b` is equivalent to `a = a + b`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`,
+`<<=`, `>>=` are also defined in this way. `a++` is equivalent to `a += 1`.
 
-Even if the types of the two operands are different, Needle allows the use of operators in expressions. In this case, the operands will be converted to the same type and then the operation will be performed. For example, to calculate `z = x + y`, where `x` is of type `int` and `y` is of type `float`, `x` and `y` will both be converted to type `decimal`. Then the addition operation is performed, and the result is of type `decimal`, which is then converted to type `float` and assigned to `z`.
+Even if the types of the two operands are different, Needle allows the use of
+operators in expressions. In this case, the operands will be converted to the
+same type and then the operation will be performed. For example, to calculate
+`z = x + y`, where `x` is of type `int` and `y` is of type `float`, `x` and `y`
+will both be converted to type `decimal`. Then the addition operation is
+performed, and the result is of type `decimal`, which is then converted to type
+`float` and assigned to `z`.
 
-It should be noted that when performing floating-point operations, the issue of precision loss should be considered to avoid incorrect results.
+It should be noted that when performing floating-point operations, the issue of
+precision loss should be considered to avoid incorrect results.
 
-The following lists the operators and result types between operands of different types:
+The following lists the operators and result types between operands of different
+types:
 
 | operand                           | x       | y       | z       |                                     |
 | --------------------------------- | ------- | ------- | ------- | ----------------------------------- |
@@ -575,13 +700,17 @@ The following lists the operators and result types between operands of different
 
 ### Slice {#spec-slice}
 
-The slice operation only applies to the types `array`, `string`, and `bytes`. The slice operator `[low:high]` is used to get a part of the array.
+The slice operation only applies to the types `array`, `string`, and `bytes`.
+The slice operator `[low:high]` is used to get a part of the array.
 
 ```go
 arr[low:high]
 ```
 
-The range of the index must be positive. If `0<=low<=high<=len(arr)`, the index range is valid, otherwise the index range is invalid. For convenience, any index can be omitted. The omitted index will be replaced by the first index or the last index of the array.
+The range of the index must be positive. If `0<=low<=high<=len(arr)`, the index
+range is valid, otherwise the index range is invalid. For convenience, any index
+can be omitted. The omitted index will be replaced by the first index or the
+last index of the array.
 
 ```go
 var a b c d e array str strA string
@@ -597,7 +726,8 @@ strA = str[1:3] // strA = "bc"
 
 ### Increment and Decrement {#spec-increment-and-decrement}
 
-`++` and `--` increment and decrement the variables of type `int`, `float`, and `money`, which can increase or decrease the variable value by 1.
+`++` and `--` increment and decrement the variables of type `int`, `float`, and
+`money`, which can increase or decrease the variable value by 1.
 
 ```go
 var a int
@@ -607,18 +737,28 @@ a++ // a = a + 1
 
 ### Control Statement {#spec-control-statement}
 
-Control statements are used to control the execution flow of the program, including return statements, if statements, while statements, break statements, and continue statements.
+Control statements are used to control the execution flow of the program,
+including return statements, if statements, while statements, break statements,
+and continue statements.
 
-> `ControlStmt` = [ReturnStmt](#return-statement) | [IfStmt](#if-statement) | [WhileStmt](#while-statement) | [BreakStmt](#break-statement) | [ContinueStmt](#continue-statement) .
+> `ControlStmt` = [ReturnStmt](#return-statement) | [IfStmt](#if-statement)
+> \| > [WhileStmt](#while-statement) | [BreakStmt](#break-statement) | >
+> [ContinueStmt](#continue-statement) .
 
-In if statements, the conversion from non-boolean types to boolean types is supported. The following rules convert boolean types to `false`, otherwise `true`. So, code like `if 1 {}` is valid.
+In if statements, the conversion from non-boolean types to boolean types is
+supported. The following rules convert boolean types to `false`, otherwise
+`true`. So, code like `if 1 {}` is valid.
 
-- `int` and `float`, `money`, `string`, `address` type values are equal to the zero value.
-- `array` and `map`, `bytes`, `file` type values are equal to nil or their length is zero.
+- `int` and `float`, `money`, `string`, `address` type values are equal to the
+  zero value.
+- `array` and `map`, `bytes`, `file` type values are equal to nil or their
+  length is zero.
 
 #### Return statement {#return-statement}
 
-The `return` statement is used in the function body to terminate the execution of the function prematurely. If the function declares result parameters, the `return` statement must return the same type and number of values.
+The `return` statement is used in the function body to terminate the execution
+of the function prematurely. If the function declares result parameters, the
+`return` statement must return the same type and number of values.
 
 > `ReturnStmt` = "return" [ExpressionList](#spec-expression) .
 
@@ -630,13 +770,18 @@ func add(a , b int) int {
 
 #### If statement {#if-statement}
 
-`if` statement executes the code block based on the value of the boolean expression. If the expression evaluates to `true`, the `if` code block is executed, otherwise the `else` code block is executed.
+`if` statement executes the code block based on the value of the boolean
+expression. If the expression evaluates to `true`, the `if` code block is
+executed, otherwise the `else` code block is executed.
 
-`elif` is actually equivalent to `else if`, it must be defined before the `else` statement.
+`elif` is actually equivalent to `else if`, it must be defined before the `else`
+statement.
 
-> `IfStmt` = "if" [Expression](#spec-expression) [CodeBlockStmt](#spec-codeblock) { `ElIfStmtList` } [`ElseStmt`] .
+> `IfStmt` = "if" [Expression](#spec-expression) >
+> [CodeBlockStmt](#spec-codeblock) { `ElIfStmtList` } [`ElseStmt`] .
 >
-> `ElIfStmtList` = "elif" [Expression](#spec-expression) [CodeBlockStmt](#spec-codeblock) .
+> `ElIfStmtList` = "elif" [Expression](#spec-expression) >
+> [CodeBlockStmt](#spec-codeblock) .
 >
 > `ElseStmt` = "else" [CodeBlockStmt](#spec-codeblock) .
 
@@ -652,15 +797,19 @@ if a > b {
 
 :::tip
 
-You should note that the boolean expression in the `if` statement does not require parentheses `()`.
+You should note that the boolean expression in the `if` statement does not
+require parentheses `()`.
 
 :::
 
 #### while statement {#while-statement}
 
-The `while` statement provides the ability to repeatedly execute a code block as long as the expression evaluates to `true`. The condition is evaluated before each iteration.
+The `while` statement provides the ability to repeatedly execute a code block as
+long as the expression evaluates to `true`. The condition is evaluated before
+each iteration.
 
-> `WhileStmt` = "while" [Expression](#spec-expression) [CodeBlockStmt](#spec-codeblock) .
+> `WhileStmt` = "while" [Expression](#spec-expression) >
+> [CodeBlockStmt](#spec-codeblock) .
 
 ```c
 var a int
@@ -671,7 +820,9 @@ while a < 10 {
 
 :::tip
 
-If the condition is always `true`, the `while` statement will be executed repeatedly. Therefore, it should include a condition that is `false` at some point.
+If the condition is always `true`, the `while` statement will be executed
+repeatedly. Therefore, it should include a condition that is `false` at some
+point.
 
 :::
 
@@ -694,7 +845,8 @@ while a < 10 {
 
 #### Continue statement {#continue-statement}
 
-`continue` statement skips the remaining code of the innermost `while` statement and continues with the next iteration of the loop.
+`continue` statement skips the remaining code of the innermost `while` statement
+and continues with the next iteration of the loop.
 
 > `ContinueStmt` = "continue" .
 

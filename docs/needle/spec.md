@@ -46,12 +46,12 @@ Use `data` keyword partially describes the smart contract data input as well as
 the received form parameters. The `optional` indicates that the parameter is
 optional and not required.
 
-> `DataStmt` = "data" "\{" \{ `ParamSign` } "}" .
+> `DataStmt` = `"data"` `"{"` { `ParamSign` } `"}"` .
 >
 > `ParamSign` = [Identifier](#spec-identifier) [Typename](#spec-typename) [
 > `Tag` ] .
 >
-> `Tag` = "optional" .
+> `Tag` = `"optional"` .
 
 use the symbol `$` to get the corresponding variable value, it must be used in
 the [Function](#spec-function) within the contract, it is equivalent to the
@@ -60,8 +60,7 @@ global variable of the contract. You can use it directly or reassign it.
 ```go
 contract Name {
   data {
-    Param1 int
-    Param2 string "optional"
+    Param1 string "optional"
   }
   func name(){
     $Param1 = 4
@@ -72,13 +71,15 @@ contract Name {
 
 ### Settings {#spec-settings}
 
-Use the `settings` keyword to declare constants, the constant type can be `int`,
+Use the `settings` keyword to declare constants, the type of constant value can be `int`,
 `float`, `string`, `bool`, it must be within the `contract`.
 
-> `SettingsStmt` = "settings" `SettingsScope` .
+constants value only can be assigned once, and cannot be changed during the execution of the contract.
+
+> `SettingsStmt` = `"settings"` `SettingsScope` .
 >
-> `SettingsScope` = "\{" [Identifier](#spec-identifier) "="
-> [Typename](#spec-typename) "}" .
+> `SettingsScope` = `"{"` [Identifier](#spec-identifier) `"="`
+> ( [Number Literal](#spec-number) | [String Literal](#spec-string) | [Boolean Literal](#spec-boolean) ) `"}"` .
 
 ```go
 contract Name {
@@ -111,16 +112,17 @@ function body.
 >
 > `FuncSign` = [ `FuncParams` ] [ `FuncTail` ] [ `FuncResult` ] .
 >
-> `FuncParams` = "(" [ `FuncParamList` ] ")" .
+> `FuncParams` = `"("` [ `FuncParamList` ] `")"` .
 >
-> `FuncParamList` = `FuncParam` \{ ("," \| " ") `FuncParam` } .
+> `FuncParamList` = `FuncParam` `{` `FuncParamSeq` `}` [ ( `","` | `" "` ) [IdentifierList](#spec-identifier) `"..."` ] .
 >
-> `FuncParam` = [IdentifierList](#spec-identifier) \{ "..." \|
-> [Typename](#spec-typename) } .
+> `FuncParam` = [IdentifierList](#spec-identifier) [Typename](#spec-typename) .
+>
+> `FuncParamSeq` = ( `","` | `" "` ) `FuncParam` .
 >
 > `FuncResult` = [TypeList](#spec-typename) .
 >
-> `FuncTail` = "." [Identifier](#spec-identifier) [ `FuncParams` ] .
+> `FuncTail` = `"."` [Identifier](#spec-identifier) [ `FuncParams` ] .
 
 The function can have multiple parameters, each parameter followed by a
 parameter name and type, separated by a space or comma. The return value cannot
@@ -148,7 +150,7 @@ func Get string{
 
 The function signature can use `...` to represent the type of variadic
 parameters, which must be the last parameter, and its data type is
-[Array](#spec-typename). The variadic parameter contains all the variables
+[array](#spec-typename). The variadic parameter contains all the variables
 starting from the call to pass the parameter. Any type of variable can be
 passed, but conflicts with data types need to be handled.
 
@@ -200,8 +202,6 @@ such a function body, you can use these parameters normally. If no parameters
 are passed, they will be assigned default values. Tail functions do not have
 return values, and the return values are part of the main function.
 
->
-
 ```go
 func myfunc(name string).Param1(p1 int).Param2(p2 string) int {
     //...
@@ -239,7 +239,7 @@ The curly braces `{}` specify a code block that can contain local variables.
 Variables in the code block can only be used in the code block and its sub-code
 block. The function body is also a code block.
 
-> `CodeBlockStmt` = "\{" ... "}" .
+> `CodeBlockStmt` = `"{"` ... `"}"` .
 
 By default, variables in a code block are not visible, and the scope of a
 variable can be extended to its sub-code block. In a code block, you can use the
@@ -308,7 +308,7 @@ var a int; as = 1
 Delimiter are used to separate identifiers, such as variable names, function
 names, type names, etc.
 
-> Delimiter = "(" | ")" | "\{" | "}" | "[" | "]" | "." | "," | "=" | ":" .
+> Delimiter = `"("` | `")"` | `"{"` | `"}"` | `"["` | `"]"` | `"."` | `"," `| `"="` | `":"` .
 
 ### Expression {#spec-expression}
 
@@ -343,16 +343,18 @@ underscores, and must begin with a letter. Identifiers cannot contain spaces and
 special characters. Identifiers are case-sensitive and cannot use
 [keywords](#spec-keyword) as identifiers.
 
-> `Identifier` = `unicode_letter` \{ `letter` \| `unicode_digit` }
+> `Identifier` = `unicode_letter` `{` `letter` | `unicode_digit` `}`
 >
-> `letter` = `unicode_letter` \| "\_" .
+> `letter` = `unicode_letter` | `"_"` .
 >
 > `unicode_letter` = // a Unicode code point classified as "Letter".
 >
 > `unicode_digit` = // a Unicode code point categorized as "Number, decimal
 > digit".
 >
-> `IdentifierList` = `Identifier` \{ ("," \| " ") `Identifier` } .
+> `IdentifierList` = `Identifier` `{` `IdentifierSeq` `}` .
+>
+> `IdentifierSeq` = ( `","` | `" "` ) `Identifier`
 
 ```go
 a
@@ -365,7 +367,7 @@ commas or spaces.
 
 ### Keyword {#spec-keyword}
 
-The following keywords are reserved and cannot be used as identifiers.
+The following keywords are reserved and cannot be used as [identifiers](#spec-identifier).
 
 |          |       |       |          |            |
 | -------- | ----- | ----- | -------- | ---------- |
@@ -377,8 +379,8 @@ The following keywords are reserved and cannot be used as identifiers.
 
 ### Number {#spec-number}
 
-Number literal values include: decimal integer, binary integer, octal integer,
-hexadecimal integer, and floating-point number and scientific notation.
+Number literal values include: `decimal` integer, `binary` integer, `octal` integer,
+`hexadecimal` integer, and floating-point number and scientific notation.
 
 There are two basic types: `int` and `float`. If the number contains a decimal
 point or `eE`, it is a **float** type, which conforms to the standard IEEE-754
@@ -398,13 +400,13 @@ Golang language.
 >
 > `hex_digit` = "0"..."9" | "A"..."F" | "a"..."f" .
 >
-> `binary_digits` = `binary_digit` \{ [ "_" ] `binary_digit` } .
+> `binary_digits` = `binary_digit` `{` [ "_" ] `binary_digit`.`}` .
 >
-> `decimal_digits`= `decimal_digit` \{ [ "_" ] `decimal_digit` } .
+> `decimal_digits`= `decimal_digit` `{` [ "_" ] `decimal_digit`. `}` .
 >
-> `octal_digits` = `octal_digit` \{ [ "_" ] `octal_digit` } .
+> `octal_digits` = `octal_digit` `{` [ "_" ] `octal_digit` `}` .
 >
-> `hex_digits` = `hex_digit` \{ [ "_" ] `hex_digit` } .
+> `hex_digits` = `hex_digit` `{` [ "_" ] `hex_digit` `}` .
 >
 > `DecimalLit` = `decimal_digit` [ "_" ] `decimal_digits` .
 >
@@ -439,9 +441,9 @@ carriage return. The string in backticks is not escaped.
 
 > `StringLiteral` = `RawStringLiteral` | `InterpretedStringLiteral` .
 >
-> `RawStringLiteral` = ``"`"`` \{ `unicode_char` } ``"`"`` .
+> `RawStringLiteral` = ``"`"`` { `unicode_char` } ``"`"`` .
 >
-> `InterpretedStringLiteral` = `"` \{ `unicode_value` } `"` .
+> `InterpretedStringLiteral` = `"` { `unicode_value` } `"` .
 >
 > `unicode_char` = // an arbitrary Unicode code point except newline.
 >
@@ -452,6 +454,12 @@ var str string
 str = "This is \n a string"
 str = `This is \n \t \r a other string`
 ```
+
+### Boolean {#spec-boolean}
+
+A boolean type has two values: `true` and `false`. It is used to represent the truth value of an expression.
+
+> `Boolean` = "true" | "false" .
 
 ### Variable {#spec-variable}
 
@@ -464,7 +472,7 @@ during program execution.
 The keyword `var` is used to declare local variables, and the variable must be
 followed by a variable name and type.
 
-> `LocalVarDecl` = "var" [IdentifierList](#spec-identifier)
+> `LocalVarDecl` = `"var"` [IdentifierList](#spec-identifier)
 > [Typename](#spec-typename) .
 
 When declaring a variable, its value is the default value. To declare one or
@@ -501,12 +509,12 @@ variable names.
 ```go
 var a b int c c1 map d d1 array
 a, b = 1, 2
-c,d = {"a":a, "b":b}, [1, 2, 3] //error
+c,d = {"a":a, "b":b}, [1, 2, 3] //invalid
 c = {"a":a, "b":b}
 d = [1, 2, 3]
 c1, d1 = c, d
-d[0], d[1] = c, d //error
-d[0], d[1] = d[1], d[0] //error
+d[0], d[1] = c, d //invalid
+d[0], d[1] = d[1], d[0] //invalid
 ```
 
 #### Global Variable {#global-variable}
@@ -514,7 +522,7 @@ d[0], d[1] = d[1], d[0] //error
 The keyword symbol `$` and [Identifier](#spec-identifier) is used to declare and
 use global variables. The syntax is as follows:
 
-> `GlobalVarDecl` = "$" [Identifier](#spec-identifier) .
+> `GlobalVarDecl` = `"$"` [Identifier](#spec-identifier) .
 
 Global variables can be declared in any function within a single contract scope,
 but must be declared before use. The parameters defined in the `data` section
@@ -567,7 +575,7 @@ variables.
 > `Typename` = "int" | "string" | "float" | "bool" | "bytes" | "address" |
 > "money" | "array" | "map" | "file" .
 >
-> `TypeList` = `Typename` \{ ("," \| " ") `Typename` } .
+> `TypeList` = `Typename` `{` ( "," | " " ) `Typename` `}` .
 
 The following type names are reserved and cannot be used as identifiers,
 equivalent to the corresponding types in the Golang language.
@@ -612,27 +620,27 @@ logical operators, bitwise operators, and assignment operators.
 
 Follow are the currently supported operators:
 
-- arithmetic operators: `+`, `-`, `*`, `/`, `%`, `++`, `--`;
-- comparison operators: `==`, `!=`, `>`, `>=`, `<`, `<=`;
-- logical operators: `&&`, `||`, `!`;
-- bitwise operators: `&`, `|`, `^`, `<<`, `>>`;
+- arithmetic operators: `+`, `-`, `*`, `/`, `%`, `++`, `--`.
+- comparison operators: `==`, `!=`, `>`, `>=`, `<`, `<=`.
+- logical operators: `&&`, `||`, `!`.
+- bitwise operators: `&`, `|`, `^`, `<<`, `>>`.
 - assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`,
   `<<=`, `>>=`.
 
 The priority of the operators is from high to low:
 
-- `++`，`--`, `!`；
-- `*`，`/`，`%`；
-- `+`，`-`；
-- `<<`，`>>`；
-- `<`，`<=`，`>`，`>=`；
-- `==`，`!=`；
-- `&`；
-- `^`；
-- `|`；
-- `&&`；
-- `||`；
-- `=`，`+=`，`-=`，`*=`，`/=`，`%=`，`&=`，`|=`，`^=`，`<<=`，`>>=`；
+- `++`, `--`, `!`.
+- `*`, `/`, `%`.
+- `+`, `-`.
+- `<<`, `>>`.
+- `<`, `<=`, `>`, `>=`.
+- `==`, `!=`.
+- `&`.
+- `^`.
+- `|`.
+- `&&`.
+- `||`.
+- `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`.
 
 The result type of the operation is the same as the type of the operand. Except
 for comparison operators and logical operators, their result type is `bool`. In
@@ -731,9 +739,10 @@ strA = str[1:3] // strA = "bc"
 `money`, which can increase or decrease the variable value by 1.
 
 ```go
-var a int
-a = 1
-a++ // a = a + 1
+var i int f float m money
+i++
+f--
+m++
 ```
 
 ### Control Statement {#spec-control-statement}
@@ -742,8 +751,8 @@ Control statements are used to control the execution flow of the program,
 including return statements, if statements, while statements, break statements,
 and continue statements.
 
-> `ControlStmt` = [ReturnStmt](#return-statement) \| [IfStmt](#if-statement)
-> \| [WhileStmt](#while-statement) \| [BreakStmt](#break-statement) \|
+> `ControlStmt` = [ReturnStmt](#return-statement) | [IfStmt](#if-statement)
+> | [WhileStmt](#while-statement) | [BreakStmt](#break-statement) |
 > [ContinueStmt](#continue-statement) .
 
 In if statements, the conversion from non-boolean types to boolean types is
@@ -779,7 +788,7 @@ executed, otherwise the `else` code block is executed.
 statement.
 
 > `IfStmt` = "if" [Expression](#spec-expression)
-> [CodeBlockStmt](#spec-codeblock) \{ `ElIfStmtList` } [`ElseStmt`] .
+> [CodeBlockStmt](#spec-codeblock) { `ElIfStmtList` } [`ElseStmt`] .
 >
 > `ElIfStmtList` = "elif" [Expression](#spec-expression)
 > [CodeBlockStmt](#spec-codeblock) .

@@ -1,4 +1,4 @@
-# Website
+# Needle documentation
 
 This website is built using [Docusaurus 3](https://docusaurus.io/), a modern
 static website generator.
@@ -26,6 +26,14 @@ $ yarn build
 
 This command generates static content into the `build` directory and can be
 served using any static contents hosting service.
+
+### Local development server
+
+This command starts the Docusaurus local development server and opens up a browser window.
+
+```
+$ yarn serve
+```
 
 ### Deployment
 
